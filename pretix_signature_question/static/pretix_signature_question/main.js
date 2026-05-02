@@ -20,7 +20,7 @@ $(function () {
         var $signature = $("<div>")
         $input.closest("div").append($signature);
         $signature.jSignature('init', {
-            'width': $(".questions-form .col-md-9").width()
+            'width': $input.closest(".col-md-9").width()
         });
 
         var $reset = $("<button>").attr("type", "button").attr("class", "btn btn-default")
