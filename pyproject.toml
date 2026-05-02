@@ -25,9 +25,10 @@ build = "pretix_plugin_build.build:CustomBuild"
 
 [build-system]
 requires = [
-    "setuptools",
+    "setuptools>=64",
     "pretix-plugin-build",
 ]
+build-backend = "setuptools.build_meta"
 
 [project.urls]
 homepage = "https://github.com/pretix-unofficial/pretix-signature-question"
