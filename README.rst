@@ -63,11 +63,17 @@ Development setup
 4. Execute ``pip install -e .`` within this directory to register this
    application with pretix's plugin registry.
 
-5. Execute ``make`` within this directory to compile translations.
-
-6. Restart your local pretix server. You can now use the plugin from this
+5. Restart your local pretix server. You can now use the plugin from this
    repository for your events by enabling it in the 'plugins' tab in the
    settings.
+
+.. note::
+
+   Translation support is intentionally not wired into the build for the
+   2.0 release. The ``locale/`` directory and ``Makefile`` are kept in
+   place because they hold existing translation work, but compiled ``.mo``
+   files are not produced or shipped. Restoring a working translations
+   build is planned for a follow-up release.
 
 This plugin has CI set up to enforce a few code style rules. To check
 locally, you need these packages installed::
