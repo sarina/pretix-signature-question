@@ -1,6 +1,6 @@
 #!/bin/sh
 COMPONENTS=pretix/pretix-plugin-pretix-signature-question
-DIR=pretix_signature_question/locale
+DIR=pretix_signature_capture/locale
 # Renerates .po files used for translating the plugin
 set -e
 set -x
