@@ -4,13 +4,13 @@ on:
   push:
     branches: [ main, master ]
     paths-ignore:
-      - 'pretix_signature_question/locale/**'
-      - 'pretix_signature_question/static/**'
+      - 'pretix_signature_capture/locale/**'
+      - 'pretix_signature_capture/static/**'
   pull_request:
     branches: [ main, master ]
     paths-ignore:
-      - 'pretix_signature_question/locale/**'
-      - 'pretix_signature_question/static/**'
+      - 'pretix_signature_capture/locale/**'
+      - 'pretix_signature_capture/static/**'
 
 jobs:
   isort:

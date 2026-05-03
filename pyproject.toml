@@ -1,16 +1,16 @@
 [project]
-name = "pretix-signature-question"
+name = "pretix-signature-capture"
 dynamic = ["version"]
-description = "Allows to draw a signature"
+description = "A pretix plugin that lets attendees draw a signature in response to a question."
 readme = "README.rst"
-requires-python = ">=3.9"
+requires-python = ">=3.11"
 license = {file = "LICENSE"}
-keywords = ["pretix"]
+keywords = ["pretix", "signature", "waiver"]
 authors = [
-    {name = "pretix team", email = "support@pretix.eu"},
+    {name = "Sarina Canelake", email = "scanelake@gmail.com"},
 ]
 maintainers = [
-    {name = "pretix team", email = "support@pretix.eu"},
+    {name = "Sarina Canelake", email = "scanelake@gmail.com"},
 ]
 
 dependencies = [
@@ -18,7 +18,7 @@ dependencies = [
 ]
 
 [project.entry-points."pretix.plugin"]
-pretix_signature_question = "pretix_signature_question:PretixPluginMeta"
+pretix_signature_capture = "pretix_signature_capture:PretixPluginMeta"
 
 [project.entry-points."distutils.commands"]
 build = "pretix_plugin_build.build:CustomBuild"
@@ -31,13 +31,13 @@ requires = [
 build-backend = "setuptools.build_meta"
 
 [project.urls]
-homepage = "https://github.com/pretix-unofficial/pretix-signature-question"
+homepage = "https://github.com/sarina/pretix-signature-capture"
 
 [tool.setuptools]
 include-package-data = true
 
 [tool.setuptools.dynamic]
-version = {attr = "pretix_signature_question.__version__"}
+version = {attr = "pretix_signature_capture.__version__"}
 
 [tool.setuptools.packages.find]
 include = ["pretix*"]
