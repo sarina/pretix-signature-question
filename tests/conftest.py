@@ -12,18 +12,10 @@ Reference: ``pretix/src/tests/conftest.py``.
 
 import datetime
 import inspect
-
 import pytest
 from django.utils.timezone import now
 from django_scopes import scope, scopes_disabled
-
-from pretix.base.models import (
-    CartPosition,
-    Event,
-    Item,
-    Organizer,
-    Question,
-)
+from pretix.base.models import CartPosition, Event, Item, Organizer, Question
 
 
 @pytest.hookimpl(hookwrapper=True)
