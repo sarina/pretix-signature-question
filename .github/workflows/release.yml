@@ -1,0 +1,63 @@
+name: Release to PyPI
+
+# Triggered by pushing an annotated tag like `v2.0.0`.
+#
+# This workflow uses PyPI Trusted Publishing (OIDC) — no PyPI API tokens
+# need to be stored as GitHub secrets. Before the first tag push, you must
+# configure the Trusted Publisher one time at:
+#
+#     https://pypi.org/manage/account/publishing/
+#
+# Required values for that PyPI form:
+#   - PyPI project name:    pretix-signature-capture
+#   - GitHub owner:         sarina
+#   - GitHub repo name:     pretix-signature-capture
+#                           (or pretix-signature-question until #15 renames)
+#   - Workflow filename:    release.yml
+#   - Environment name:     pypi
+#
+# Docs: https://docs.pypi.org/trusted-publishers/
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    name: Build distribution
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Install build tooling
+        run: pip install build twine
+      - name: Build sdist + wheel
+        run: python -m build
+      - name: Check artifacts with twine
+        run: twine check dist/*
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+  publish:
+    name: Publish to PyPI
+    needs: [build]
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/pretix-signature-capture
+    permissions:
+      # Required for PyPI Trusted Publishing (OIDC token exchange).
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1

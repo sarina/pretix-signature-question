@@ -2,35 +2,39 @@ name: Tests
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [main, release-2.0]
     paths-ignore:
       - 'pretix_signature_capture/locale/**'
   pull_request:
-    branches: [ main, master ]
+    branches: [main, release-2.0]
     paths-ignore:
       - 'pretix_signature_capture/locale/**'
 
 jobs:
   test:
+    name: Tests (Python ${{ matrix.python-version }})
     runs-on: ubuntu-latest
-    name: Tests
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.11', '3.12', '3.13']
     steps:
-      - uses: actions/checkout@v2
-      - name: Set up Python 3.11
-        uses: actions/setup-python@v1
+      - uses: actions/checkout@v5
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
         with:
-          python-version: 3.11
+          python-version: ${{ matrix.python-version }}
       - uses: actions/cache@v4
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/setup.py') }}
+          key: ${{ runner.os }}-pip-test-${{ matrix.python-version }}-${{ hashFiles('**/pyproject.toml', '**/setup.cfg') }}
           restore-keys: |
-            ${{ runner.os }}-pip-
+            ${{ runner.os }}-pip-test-${{ matrix.python-version }}-
       - name: Install system dependencies
-        run: sudo apt update && sudo apt install gettext
+        run: sudo apt-get update && sudo apt-get install -y gettext
       - name: Install pretix
-        run: pip3 install pretix
-      - name: Install Dependencies
-        run: pip3 install pytest pytest-django -Ue .
-      - name: Run checks
-        run: py.test tests
+        run: pip install pretix
+      - name: Install plugin and test deps
+        run: pip install pytest pytest-django -Ue .
+      - name: Run tests
+        run: pytest tests

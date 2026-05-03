@@ -164,7 +164,98 @@ the existing tickets. Worth filing as new issues at some point.
   have access to. Should be deleted or rewritten if/when we set up our own
   translation pipeline.
 - **GitHub Actions workflows already exist** — Issue #3's premise that
-  there are no workflows is wrong. Issue #3 should be re-scoped to:
+  there are no workflows is wrong. Issue #3 was re-scoped accordingly:
   modernize the existing workflows (use modern action versions, fix the
   matrix, replace `setup.py sdist` with `python -m build`) and add the
-  missing release-on-tag workflow.
+  missing release-on-tag workflow. *(Resolved in #3.)*
+
+### Issue #3 — Migrate / modernize CI
+
+- Branch: `issue-3` -> PR into `release-2.0`
+- Status: ready for review
+
+Re-scoped from "create GH Actions from scratch" (the original ticket's
+premise) to "modernize the GH Actions that already exist + add release."
+
+Changes landed:
+
+- **`.github/workflows/style.yml`** rewritten:
+  - `actions/checkout@v2` -> `@v5`, `actions/setup-python@v1` -> `@v5`.
+  - Four parallel single-tool lint jobs collapsed into one `lint` job
+    with separate steps per tool (still see which tool failed; ~4x
+    faster because we set up Python and pip cache once instead of four
+    times, and skip the unnecessary `pip install pretix` for lint —
+    pretix isn't required by isort/flake8/black/docformatter; isort's
+    `known_third_party = pretix` is just a categorization hint).
+  - `packaging` job kept separate; uses `python -m build` instead of
+    deprecated `python setup.py sdist`.
+  - Cache key now hashes `pyproject.toml` + `setup.cfg` (where deps and
+    lint config actually live) instead of `setup.py` (which is now empty).
+  - Triggers extended from `[main, master]` to `[main, release-2.0]` so
+    PRs into our 2.0 trunk actually run CI. (`master` removed — we don't
+    have one.)
+
+- **`.github/workflows/tests.yml`** rewritten:
+  - Same action-version updates as above.
+  - Added Python matrix `[3.11, 3.12, 3.13]` per the original ticket.
+  - Same trigger and cache-key fixes as style.yml.
+
+- **`.github/workflows/release.yml`** added (new):
+  - Tag-triggered (`v*`).
+  - Two-stage: `build` produces sdist+wheel and uploads as artifact;
+    `publish` downloads and pushes to PyPI.
+  - Uses `pypa/gh-action-pypi-publish` with PyPI Trusted Publishing
+    (OIDC) — no API tokens stored in GH secrets.
+  - File header documents the one-time PyPI Trusted Publisher
+    configuration that must happen before the first tag push (URL +
+    exact field values).
+  - Uses an `environment: pypi` so you can add reviewers/protection on
+    PyPI publishes via GitHub environment protection rules.
+
+- **`.gitlab-ci.yml`** removed
+- **`MANIFEST.in`**: dropped `exclude .gitlab-ci.yml` (the file no longer
+  exists, so the line was producing build warnings).
+- **`README.rst`**: added Tests + Code Style badge images near the top,
+  pointing at the future repo URL (consistent with other URLs in README;
+  badges 404 today, work after rename in #15).
+
+Verification: parsed all three workflow files with `yaml.safe_load` and
+confirmed the expected job structures (`lint`+`packaging`, `test`,
+`build`+`publish`). Real CI verification will happen once the PR is open
+against `release-2.0` — the workflow trigger update means CI will fire on
+the PR itself.
+
+Pre-merge checklist for the user (reminders):
+
+1. Set up PyPI Trusted Publishing for `pretix-signature-capture` before
+   tagging any release (URL + values are documented in `release.yml`).
+2. Create a GitHub Environment named `pypi` if you want manual approval
+   gating on publishes.
+3. The `.gitlab-ci.yml` deletion couldn't complete via the sandbox; you
+   need to run `git rm .gitlab-ci.yml` from your terminal before
+   committing this branch.
+
+Also folded into this issue: added `make requirements` and `make lint`
+targets to the `Makefile`. After enabling them, discovered that the lint
+tools were recursing into `.venv/` and reporting on pretix's own source.
+Fixed by adding directory exclusions to each tool's config:
+`setup.cfg [flake8] exclude` and `[isort] skip_glob` got the venv/build/dist
+patterns; `pyproject.toml` got new `[tool.docformatter]` (with `recursive
+= true` so the Makefile no longer needs `-r`) and `[tool.black]` (just a
+target-version pin — black already excludes `.venv` by default).
+
+Doing so surfaced 5 small pre-existing lint failures in
+`apps.py`/`signals.py` (isort grouping, blank-line placement, single vs.
+double quotes, a 91-char line over black's 88 default). All auto-fixed
+in this PR; otherwise `make lint` would have shipped red.
+
+Also aligned flake8's `max-line-length` (was 160, now 88) with black's
+default — single source of truth for line width. `requirements` bootstraps a dev environment
+(pretix + plugin in editable mode + lint/test/build tooling). `lint`
+runs the same four checks CI does. README dev-setup section updated to
+point at these. Tool lists are kept in Makefile variables
+(`LINT_TOOLS`, `TEST_TOOLS`, `BUILD_TOOLS`) so they don't drift within
+the file. (CI workflows still hard-code their own tool installs; if
+that drift becomes a problem, the longer-term fix is to declare them
+in `[project.optional-dependencies]` in `pyproject.toml` and use
+`pip install -e .[dev]` in both places — out of scope for now.)

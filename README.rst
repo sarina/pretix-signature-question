@@ -1,5 +1,14 @@
-Signature Capture
-=================
+Pretix Signature Capture
+========================
+
+|tests-badge| |style-badge|
+
+.. |tests-badge| image:: https://github.com/sarina/pretix-signature-capture/actions/workflows/tests.yml/badge.svg
+   :target: https://github.com/sarina/pretix-signature-capture/actions/workflows/tests.yml
+   :alt: Tests
+.. |style-badge| image:: https://github.com/sarina/pretix-signature-capture/actions/workflows/style.yml/badge.svg
+   :target: https://github.com/sarina/pretix-signature-capture/actions/workflows/style.yml
+   :alt: Code Style
 
 A `pretix`_ plugin that lets attendees draw a signature in response to a
 question — useful for liability waivers, photo releases, code-of-conduct
@@ -60,34 +69,23 @@ Development setup
 
 3. Activate the virtual environment you use for pretix development.
 
-4. Execute ``pip install -e .`` within this directory to register this
-   application with pretix's plugin registry.
+4. Install all development dependencies (pretix, the plugin in editable
+   mode, plus lint/test/build tooling)::
+
+       make requirements
+
+   If you only want to install the plugin itself,
+   ``pip install -e .`` is sufficient.
 
 5. Restart your local pretix server. You can now use the plugin from this
    repository for your events by enabling it in the 'plugins' tab in the
    settings.
 
-.. note::
+To check your plugin for code-style violations (matches what CI runs)::
 
-   Translation support is intentionally not wired into the build for the
-   2.0 release. The ``locale/`` directory and ``Makefile`` are kept in
-   place because they hold existing translation work, but compiled ``.mo``
-   files are not produced or shipped. Restoring a working translations
-   build is planned for a follow-up release.
+    make lint
 
-This plugin has CI set up to enforce a few code style rules. To check
-locally, you need these packages installed::
-
-    pip install flake8 isort black docformatter
-
-To check your plugin for rule violations, run::
-
-    docformatter --check -r .
-    black --check .
-    isort -c .
-    flake8 .
-
-You can auto-fix some of these issues by running::
+To auto-fix the issues those checks flag::
 
     docformatter -r .
     isort .
@@ -95,6 +93,15 @@ You can auto-fix some of these issues by running::
 
 To automatically check for these issues before you commit, you can run
 ``.install-hooks``.
+
+i18n
+----
+
+Translation support is intentionally not wired into the build for the
+2.0 release. The ``locale/`` directory and ``Makefile`` are kept in
+place because they hold existing translation work, but compiled ``.mo``
+files are not produced or shipped. Restoring a working translations
+build is planned for a follow-up release.
 
 Acknowledgements
 ----------------
@@ -109,6 +116,7 @@ License
 -------
 
 Copyright 2021 pretix
+
 Copyright 2026 Sarina Canelake
 
 Released under the terms of the Apache License 2.0.
