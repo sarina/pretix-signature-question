@@ -58,7 +58,7 @@ release issue (#15).
 Makefile remain in the tree, but no compiled `.mo` files are produced or
 shipped. Discovered during Issue #2 that the existing build hook hadn't
 been firing under modern setuptools/PEP 517 anyway. A working translations
-pipeline will be restored in a future release.
+pipeline will be restored in a future release. Ref https://github.com/sarina/pretix-signature-question/issues/18
 
 ## Progress log
 
