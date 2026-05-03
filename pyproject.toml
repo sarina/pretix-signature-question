@@ -20,14 +20,8 @@ dependencies = [
 [project.entry-points."pretix.plugin"]
 pretix_signature_capture = "pretix_signature_capture:PretixPluginMeta"
 
-[project.entry-points."distutils.commands"]
-build = "pretix_plugin_build.build:CustomBuild"
-
 [build-system]
-requires = [
-    "setuptools>=64",
-    "pretix-plugin-build",
-]
+requires = ["setuptools>=64"]
 build-backend = "setuptools.build_meta"
 
 [project.urls]
