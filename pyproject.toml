@@ -58,3 +58,11 @@ exclude = [
 # versions get consistent output.
 [tool.black]
 target-version = ["py311", "py312", "py313"]
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "pretix.testutils.settings"
+# Ignore warnings coming from site packages
+filterwarnings = [
+    "ignore:::pretix",
+    "ignore:::django"
+]

@@ -1,4 +1,4 @@
-.PHONY: help localecompile localegen requirements lint
+.PHONY: help localecompile localegen requirements lint test fix
 
 # Put it first so that "make" without argument is like "make help".
 PYTHON_VERSION := $(shell python3 -c 'import tomllib; print(tomllib.load(open("pyproject.toml", "rb"))["project"]["requires-python"])')
@@ -12,7 +12,7 @@ help:
 
 # Tool lists, kept here so they live in one place and don't drift.
 LINT_TOOLS  := isort flake8 black docformatter
-TEST_TOOLS  := pytest pytest-django
+TEST_TOOLS  := pytest pytest-django pytest-cov
 BUILD_TOOLS := build twine check-manifest
 
 
@@ -28,6 +28,9 @@ lint:  ## Run all linters in check mode (no auto-fix). Mirrors what CI runs.
 	flake8 .
 	black --check .
 	docformatter --check -r .
+
+test:  ## Run pytest with coverage. Mirrors what CI runs.
+	pytest --cov=pretix_signature_capture tests
 
 fix:  ## Runs isort, black, and docformatter to autofix linting issues
 	isort . && black . && docformatter -r .
