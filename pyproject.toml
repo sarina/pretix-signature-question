@@ -36,3 +36,25 @@ version = {attr = "pretix_signature_capture.__version__"}
 [tool.setuptools.packages.find]
 include = ["pretix*"]
 namespaces = false
+
+# docformatter has no built-in directory exclusions (unlike black), so it'll
+# happily recurse into .venv if not told otherwise. `recursive = true` lets
+# the Makefile drop the `-r` flag.
+[tool.docformatter]
+recursive = true
+exclude = [
+    ".venv",
+    "venv",
+    "env",
+    ".eggs",
+    "*.egg-info",
+    "build",
+    "dist",
+    ".git",
+]
+
+# black's DEFAULT_EXCLUDES already covers .venv, venv, build, dist, etc., but
+# we pin a target-version explicitly so contributors on different Python
+# versions get consistent output.
+[tool.black]
+target-version = ["py311", "py312", "py313"]

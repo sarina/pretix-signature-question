@@ -69,26 +69,23 @@ Development setup
 
 3. Activate the virtual environment you use for pretix development.
 
-4. Execute ``pip install -e .`` within this directory to register this
-   application with pretix's plugin registry.
+4. Install all development dependencies (pretix, the plugin in editable
+   mode, plus lint/test/build tooling)::
+
+       make requirements
+
+   If you only want to install the plugin itself,
+   ``pip install -e .`` is sufficient.
 
 5. Restart your local pretix server. You can now use the plugin from this
    repository for your events by enabling it in the 'plugins' tab in the
    settings.
 
-This plugin has CI set up to enforce a few code style rules. To check
-locally, you need these packages installed::
+To check your plugin for code-style violations (matches what CI runs)::
 
-    pip install flake8 isort black docformatter
+    make lint
 
-To check your plugin for rule violations, run::
-
-    docformatter --check -r .
-    black --check .
-    isort -c .
-    flake8 .
-
-You can auto-fix some of these issues by running::
+To auto-fix the issues those checks flag::
 
     docformatter -r .
     isort .

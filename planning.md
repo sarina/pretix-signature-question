@@ -234,3 +234,28 @@ Pre-merge checklist for the user (reminders):
 3. The `.gitlab-ci.yml` deletion couldn't complete via the sandbox; you
    need to run `git rm .gitlab-ci.yml` from your terminal before
    committing this branch.
+
+Also folded into this issue: added `make requirements` and `make lint`
+targets to the `Makefile`. After enabling them, discovered that the lint
+tools were recursing into `.venv/` and reporting on pretix's own source.
+Fixed by adding directory exclusions to each tool's config:
+`setup.cfg [flake8] exclude` and `[isort] skip_glob` got the venv/build/dist
+patterns; `pyproject.toml` got new `[tool.docformatter]` (with `recursive
+= true` so the Makefile no longer needs `-r`) and `[tool.black]` (just a
+target-version pin — black already excludes `.venv` by default).
+
+Doing so surfaced 5 small pre-existing lint failures in
+`apps.py`/`signals.py` (isort grouping, blank-line placement, single vs.
+double quotes, a 91-char line over black's 88 default). All auto-fixed
+in this PR; otherwise `make lint` would have shipped red.
+
+Also aligned flake8's `max-line-length` (was 160, now 88) with black's
+default — single source of truth for line width. `requirements` bootstraps a dev environment
+(pretix + plugin in editable mode + lint/test/build tooling). `lint`
+runs the same four checks CI does. README dev-setup section updated to
+point at these. Tool lists are kept in Makefile variables
+(`LINT_TOOLS`, `TEST_TOOLS`, `BUILD_TOOLS`) so they don't drift within
+the file. (CI workflows still hard-code their own tool installs; if
+that drift becomes a problem, the longer-term fix is to declare them
+in `[project.optional-dependencies]` in `pyproject.toml` and use
+`pip install -e .[dev]` in both places — out of scope for now.)

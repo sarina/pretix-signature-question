@@ -1,4 +1,5 @@
 from django.utils.translation import gettext_lazy
+
 from . import __version__
 
 try:
@@ -15,7 +16,9 @@ class PluginApp(PluginConfig):
     class PretixPluginMeta:
         name = gettext_lazy("Signature Capture")
         author = "Sarina Canelake"
-        description = gettext_lazy("Allows attendees to draw a signature in response to a question.")
+        description = gettext_lazy(
+            "Allows attendees to draw a signature in response to a question."
+        )
         visible = True
         version = __version__
         category = "CUSTOMIZATION"
@@ -23,5 +26,3 @@ class PluginApp(PluginConfig):
 
     def ready(self):
         from . import signals  # NOQA
-
-
