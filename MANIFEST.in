@@ -2,4 +2,3 @@ recursive-include pretix_signature_capture/static *
 recursive-include pretix_signature_capture/templates *
 recursive-include pretix_signature_capture/locale *
 include LICENSE
-exclude .gitlab-ci.yml

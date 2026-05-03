@@ -1,6 +1,15 @@
 Signature Capture
 =================
 
+|tests-badge| |style-badge|
+
+.. |tests-badge| image:: https://github.com/sarina/pretix-signature-capture/actions/workflows/tests.yml/badge.svg
+   :target: https://github.com/sarina/pretix-signature-capture/actions/workflows/tests.yml
+   :alt: Tests
+.. |style-badge| image:: https://github.com/sarina/pretix-signature-capture/actions/workflows/style.yml/badge.svg
+   :target: https://github.com/sarina/pretix-signature-capture/actions/workflows/style.yml
+   :alt: Code Style
+
 A `pretix`_ plugin that lets attendees draw a signature in response to a
 question — useful for liability waivers, photo releases, code-of-conduct
 acknowledgements, and other situations where a typed checkbox isn't enough.
