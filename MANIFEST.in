@@ -1,4 +1,7 @@
 recursive-include pretix_signature_capture/static *
 recursive-include pretix_signature_capture/templates *
 recursive-include pretix_signature_capture/locale *
+recursive-include tests *.py
 include LICENSE
+include *.sh
+include planning.md
