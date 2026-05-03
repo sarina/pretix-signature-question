@@ -35,6 +35,6 @@ jobs:
       - name: Install pretix
         run: pip install pretix
       - name: Install plugin and test deps
-        run: pip install pytest pytest-django -Ue .
+        run: pip install pytest pytest-django pytest-cov -Ue .
       - name: Run tests
-        run: pytest tests
+        run: pytest --cov=pretix_signature_capture tests
