@@ -15,15 +15,28 @@ $(function () {
             return;
         }
         var $input = $(this).find("input[type=file]");
-        $input.hide();
+        $input.attr({
+    "aria-hidden": "true",
+    "tabindex": "-1"
+}).css({
+    "position": "absolute",
+    "left": "-9999px"
+});
 
-        var $signature = $("<div>")
+        var $signature = $("<div>");
         $input.closest("div").append($signature);
         $signature.jSignature('init', {
             'width': $input.closest(".col-md-9").width()
         });
-
-        var $reset = $("<button>").attr("type", "button").attr("class", "btn btn-default")
+$signature.attr({
+    "role": "img",
+    "aria-label": "Signature pad — sign with mouse, finger, or stylus.",
+    "tabindex": "0"
+});
+        var $reset = $("<button>")
+    .attr("type", "button")
+    .attr("class", "btn btn-default")
+    .attr("aria-label", "Reset signature field")
             .text(gettext("Reset")).on("click", function () {
                 $signature.jSignature("clear");
             });
