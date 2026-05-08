@@ -31,12 +31,12 @@ $(function () {
 $signature.attr({
     "role": "img",
     "aria-label": "Signature pad — sign with mouse, finger, or stylus.",
-    "tabindex": "0"
+    
 });
         var $reset = $("<button>")
     .attr("type", "button")
     .attr("class", "btn btn-default")
-    .attr("aria-label", "Reset signature field")
+    .attr("aria-label", "Reset signature for this field")
             .text(gettext("Reset")).on("click", function () {
                 $signature.jSignature("clear");
             });
