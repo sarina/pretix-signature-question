@@ -1,3 +1,4 @@
+
 # release-2.0 — Planning Notes
 
 This file tracks the in-flight 2.0 release work for what was
@@ -259,3 +260,13 @@ the file. (CI workflows still hard-code their own tool installs; if
 that drift becomes a problem, the longer-term fix is to declare them
 in `[project.optional-dependencies]` in `pyproject.toml` and use
 `pip install -e .[dev]` in both places — out of scope for now.)
+
+## Accessibility improvements for signature widget
+
+Planned updates:
+- Hide file input accessibly using aria-hidden and tabindex
+- Improve keyboard navigation and accessibility labels
+- Add accessible reset button labeling
+- Preserve required-field indicators
+- Document accessibility limitations in README
+

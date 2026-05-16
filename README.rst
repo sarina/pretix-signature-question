@@ -60,6 +60,12 @@ Existing question answers (the captured signature PNGs already attached to
 orders) are preserved — they live in Pretix's question-answer storage, not
 in the plugin.
 
+Accessibility note
+------------------
+
+Signature capture widgets based on canvas elements may not be fully accessible for blind or low-vision users. Event organizers are encouraged to provide an alternative verification method when possible, such as a confirmation checkbox or emailed waiver.
+
+
 Development setup
 -----------------
 
